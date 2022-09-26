@@ -134,7 +134,6 @@ int main(int argc, char** argv) {
     printf("Knight's position: (%d %d)\n", position.knight[0],
 	    position.knight[1]);
     Path* path = malloc(sizeof(Path));    
-//    Path* path;
     int steps;
     path = find_path(path, chessBoard, position);
     steps = path->steps;
