@@ -1,0 +1,171 @@
+URL to view log online:
+https://source.eait.uq.edu.au/viewvc/csse2310-sem2-s4605580/trunk/a1/?view=log
+
+Retrieving logs at Tue Aug 23 21:19:45 AEST 2022
+------------------------------------------------------------------------
+r1 | uqpsutto | 2022-07-27 22:00:21 +1000 (Wed, 27 Jul 2022) | 1 line
+Changed paths:
+   A /play
+   A /prac
+   A /trunk
+   A /trunk/a1
+   A /trunk/a3
+   A /trunk/a4
+
+Initial repository structure
+
+
+------------------------------------------------------------------------
+r7 | s4605580 | 2022-08-14 02:18:23 +1000 (Sun, 14 Aug 2022) | 2 lines
+Changed paths:
+   A /trunk/a1/makefile
+   A /trunk/a1/wordle-helper.c
+
+Step1 finished, some bugs to be fixed in step2 and 3.
+
+
+Index: wordle-helper.c
+ wordle-helper.c |   87 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 87 insertions(+)
+Index: makefile
+ makefile |    7 +++++++
+ 1 file changed, 7 insertions(+)
+
+------------------------------------------------------------------------
+r8 | s4605580 | 2022-08-16 10:51:23 +1000 (Tue, 16 Aug 2022) | 2 lines
+Changed paths:
+   M /trunk/a1/makefile
+
+step 1 - 5 finished and test1 all passed. To be continue, pattern invalid cannot pass.
+
+
+Index: makefile
+ makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+------------------------------------------------------------------------
+r9 | s4605580 | 2022-08-16 10:53:45 +1000 (Tue, 16 Aug 2022) | 2 lines
+Changed paths:
+   A /trunk/a1/wordleHelper.c
+
+step 1 - 5 finished and test1 all passed. To be continue, pattern invalid cannot pass.
+
+
+Index: wordleHelper.c
+ wordleHelper.c |  177 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 177 insertions(+)
+
+------------------------------------------------------------------------
+r10 | s4605580 | 2022-08-17 04:04:09 +1000 (Wed, 17 Aug 2022) | 2 lines
+Changed paths:
+   M /trunk/a1/wordleHelper.c
+
+fix some bugs and some style errors. This can check input validity now, passed testa1.sh first two parts, to be continued.
+
+
+Index: wordleHelper.c
+ wordleHelper.c |  312 ++++++++++++++++++++++++++++++++++++---------------------
+ 1 file changed, 198 insertions(+), 114 deletions(-)
+
+------------------------------------------------------------------------
+r11 | s4605580 | 2022-08-17 19:36:21 +1000 (Wed, 17 Aug 2022) | 2 lines
+Changed paths:
+   M /trunk/a1/wordleHelper.c
+
+step 1-8 finished, test passed 1-3, to be continue soon!
+
+
+Index: wordleHelper.c
+ wordleHelper.c |   41 +++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 37 insertions(+), 4 deletions(-)
+
+------------------------------------------------------------------------
+r12 | s4605580 | 2022-08-19 01:12:30 +1000 (Fri, 19 Aug 2022) | 2 lines
+Changed paths:
+   M /trunk/a1/makefile
+   M /trunk/a1/wordleHelper.c
+
+test 1-4 pass, test 5 tobe finished. Approach 1-9 finished.
+
+
+Index: makefile
+ makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+Index: wordleHelper.c
+ wordleHelper.c |   65 ++++++++++++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 48 insertions(+), 17 deletions(-)
+
+------------------------------------------------------------------------
+r13 | s4605580 | 2022-08-21 03:27:39 +1000 (Sun, 21 Aug 2022) | 14 lines
+Changed paths:
+   M /trunk/a1/wordleHelper.c
+
+Hello marker! I was focus on my codes and testing results until I saw the SVN marking criterion, hope it's not too late to comment on my codes.
+
+So far, I've made check_len(), check_with(), check_without(), check_pattern() functions to check the parameter of input, and left -alphabet and -best in the main function, which will be fixed later.
+
+Also, I have patter_err(), dict_err() (to be finished later), usg_err() to report errors in this program.
+
+next, I will write open_dict() function to replace those parts in main.
+
+Now, I'm fixing contain_checking() function to filter -with and -without outputs.
+
+My aim is to completely run this program first to satisfy funtionality, and then structure it appropriately. last two suggested approach to finished, test 1-6 almost finished!
+
+Anyway, new to C and have learned a lot! Keep going tomorrow!
+
+
+Index: wordleHelper.c
+ wordleHelper.c |  156 +++++++++++++++++++++++++++++++++------------------------
+ 1 file changed, 91 insertions(+), 65 deletions(-)
+
+------------------------------------------------------------------------
+r14 | s4605580 | 2022-08-21 15:46:43 +1000 (Sun, 21 Aug 2022) | 4 lines
+Changed paths:
+   M /trunk/a1/wordleHelper.c
+
+finished contain_checking() function, which will check if a word contains -with input, which facilitates this program to print the dictionary that contains -with input
+
+test 1-6 all pass, to do -without input next!
+
+
+Index: wordleHelper.c
+ wordleHelper.c |  134 +++++++++++++++++++++++----------------------------------
+ 1 file changed, 56 insertions(+), 78 deletions(-)
+
+------------------------------------------------------------------------
+r15 | s4605580 | 2022-08-22 02:55:14 +1000 (Mon, 22 Aug 2022) | 6 lines
+Changed paths:
+   M /trunk/a1/wordleHelper.c
+
+have finished exclude_checking() function, which checks if a word excludes letters in after parameter "-without"
+all test from 1-8 are passed, all suggested approaches completed.
+
+next, should fix the bug that this program can't correctly distinguish "-with" and "-without" when the input are same, and try advance functionality.
+nice job, keep going!
+
+
+Index: wordleHelper.c
+ wordleHelper.c |  116 ++++++++++++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 86 insertions(+), 30 deletions(-)
+
+------------------------------------------------------------------------
+r16 | s4605580 | 2022-08-23 01:02:24 +1000 (Tue, 23 Aug 2022) | 9 lines
+Changed paths:
+   M /trunk/a1/wordleHelper.c
+
+Integrate all functions well and successfully pass all tests except sorting.
+
+Initialized 'c' to be zero and check after while looping file reading to know if some words are read,
+then initialized 'a' to zero to check if any words are printed. By doing so to know if exit(4) should be implemented.
+
+Next, trying to challenge dynamic memory to store each word that should be print.
+
+Generally, 80% of work are done, keep going and good luck to myself.
+
+
+Index: wordleHelper.c
+ wordleHelper.c |   76 ++++++++++++++++++++++++++++++++-------------------------
+ 1 file changed, 43 insertions(+), 33 deletions(-)
+
+------------------------------------------------------------------------
