@@ -1,0 +1,306 @@
+URL to view log online:
+https://source.eait.uq.edu.au/viewvc/csse2310-sem2-s4605580/trunk/a4/?view=log
+
+Retrieving logs at Fri Oct 28 16:44:33 AEST 2022
+------------------------------------------------------------------------
+r1 | uqpsutto | 2022-07-27 22:00:21 +1000 (Wed, 27 Jul 2022) | 1 line
+Changed paths:
+   A /play
+   A /prac
+   A /trunk
+   A /trunk/a1
+   A /trunk/a3
+   A /trunk/a4
+
+Initial repository structure
+
+
+------------------------------------------------------------------------
+r40 | s4605580 | 2022-10-15 00:07:26 +1000 (Sat, 15 Oct 2022) | 2 lines
+Changed paths:
+   A /trunk/a4/Makefile
+
+Makefile
+
+
+Index: Makefile
+ Makefile |    9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+------------------------------------------------------------------------
+r41 | s4605580 | 2022-10-15 00:18:16 +1000 (Sat, 15 Oct 2022) | 16 lines
+Changed paths:
+   A /trunk/a4/psclient.c
+
+psclient
+
+Enum some exit codes and the position of command line parameters.
+
+Define a structure Parameters to hold the arguments from command line.
+
+Create a function valid_name() that checks if the name argument is valid or not, if the name includes ' ', ';', or '\n' then it is invalid.
+
+Create parse_command_line() that handles command line arguments, if errors exist in those arguments, the programme will exit as it suppose to be, otherwise it returns parameter values in a structure.
+
+Create receiving() to receive data from server, this function is to be used in multi-thread that some thread will call this function.
+
+Create send_to_server() to send data received from stdin to server, this function is to be call by threads.
+
+In the main function, it opens a socket and try to connect to the port that specified in the command line, it also spawns two threads to handle the data from stdin and data from server at the same time.
+
+
+Index: psclient.c
+ psclient.c |  130 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 130 insertions(+)
+
+------------------------------------------------------------------------
+r42 | s4605580 | 2022-10-18 19:58:27 +1000 (Tue, 18 Oct 2022) | 22 lines
+Changed paths:
+   A /trunk/a4/psserver.c
+
+Start programming psserver.c
+
+#include useful libraries and #define useful macros to avoid magic numbers.
+
+Add a enum for parameter positions to avoid magic numbers.
+
+Add a enum for exit code to avoid magic numbers.
+
+define a structure that holds the parameters from command line.
+
+create a function usage_err() to handle usage errors, this is to avoid repeat codes.
+
+create parse_command_line() to parse command line parameters. This function will check if the command line arguments are valid and return the params structure including port numbers and connection numbers.
+
+Create open_listen() to listen to a port, this function will occur error when the port cannot listen toand print error messages. It will return the file descriptor that associates to the listening port.
+
+Create check_valid() to check the information that server receives are valid or not.
+
+create client_thread() to handle the connection from clients.
+
+create process_connection() to handle the connection process, it will accpet connection after opening a listening port.
+
+
+Index: psserver.c
+ psserver.c |  234 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 234 insertions(+)
+
+------------------------------------------------------------------------
+r43 | s4605580 | 2022-10-22 04:23:42 +1000 (Sat, 22 Oct 2022) | 20 lines
+Changed paths:
+   M /trunk/a4/psserver.c
+
+Add <stringmap.h> library.
+
+Define a structure ThreadArgs to handle multi-threads later.
+
+Define a structure Node to help in link list later.
+
+Define a structure LinkedList as a data structure to be used in StringMap.
+
+Define a structure Client to hold client information.
+
+Set SOMAXCONN to maximize possible listening port.
+
+Create process_sub() to handle the "sub" information received from clients. Similarly, I also create process_pub(), process_unsub() to handle "pub" and "unsub" commands.
+
+Create process_communication() to handle all received informations from clients. It will validate if the command is valid and then process it.
+
+Add semaphore to client_thread() to help thread safe.
+
+Add more values in process_connection() to help thread handling.
+
+
+Index: psserver.c
+ psserver.c |  207 +++++++++++++++++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 160 insertions(+), 47 deletions(-)
+
+------------------------------------------------------------------------
+r44 | s4605580 | 2022-10-22 17:48:23 +1000 (Sat, 22 Oct 2022) | 8 lines
+Changed paths:
+   M /trunk/a4/psserver.c
+
+The server can now correctly handle communication protocol.
+
+Remove tail node from LinkedList, not use it here.
+
+Clean some unused memory allocations.
+
+In "sub", "pub", "unsub" functions, now use an indicator to indicator the position in a linkedList.
+
+
+Index: psserver.c
+ psserver.c |   57 ++++++++++++++++++++++++++-------------------------------
+ 1 file changed, 26 insertions(+), 31 deletions(-)
+
+------------------------------------------------------------------------
+r45 | s4605580 | 2022-10-22 20:55:20 +1000 (Sat, 22 Oct 2022) | 2 lines
+Changed paths:
+   M /trunk/a4/psclient.c
+
+Add comments to functions, structs, enums, and Macros to avoid style errors.
+
+
+Index: psclient.c
+ psclient.c |   52 ++++++++++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 46 insertions(+), 6 deletions(-)
+
+------------------------------------------------------------------------
+r46 | s4605580 | 2022-10-26 18:10:35 +1000 (Wed, 26 Oct 2022) | 2 lines
+Changed paths:
+   M /trunk/a4/Makefile
+
+Add stringmap.o
+
+
+Index: Makefile
+ Makefile |   26 +++++++++++++++++++++-----
+ 1 file changed, 21 insertions(+), 5 deletions(-)
+
+------------------------------------------------------------------------
+r47 | s4605580 | 2022-10-26 21:53:44 +1000 (Wed, 26 Oct 2022) | 30 lines
+Changed paths:
+   M /trunk/a4/psserver.c
+
+I just got feedback from A3 that I should commit more often rather than a big commit, I promise will do that next time...
+
+Add <signal.h> library to handle signals.
+
+Add macro to avoid magic numbers when using split_by_char function.
+
+Add http error exit code in enum ExitCode.
+
+Create an enum of space numbers that "pub", "sub", "unsub" suppose to have, which is helpful to avoid magic numbers.
+
+Add statistics parameters to ThreadArgs to handle the statistics when receiving a sighup.
+
+Replace many magic numbers to meaningful symbols.
+
+Fix some style problems that to many spaces in next line.
+
+Create a function find_space_nums() to find how many space is in a line, which is helpful to reduce lines from the previous function, to achieve style requirement.
+
+Change the input of process_sub/pub/unsub from StringMap to a thread argument struct, which is helpful in handling statistics.
+
+Create sighup_handling to handle SIGHUP signal, which will print the statistics to stderr when the server receives SIGHUP.
+
+Add an extra thread to process_connection to handle SIGHUP.
+
+Create open_http_listen to listen http port when the variable is specified.
+
+Create process_http_connection() to handle http connections.
+
+Add http listen and process connection function to main function.
+
+
+Index: psserver.c
+ psserver.c |  217 ++++++++++++++++++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 181 insertions(+), 36 deletions(-)
+
+------------------------------------------------------------------------
+r48 | s4605580 | 2022-10-26 22:03:56 +1000 (Wed, 26 Oct 2022) | 16 lines
+Changed paths:
+   A /trunk/a4/stringmap.c
+
+My implementation of stringmap.c.
+
+Declare the structure of StringMap that contains an array of StringMapItems and the number of items.
+
+Create stringmap_init() that initializes the stringmap to 0 items and allocate memory to it.
+
+Create stringmap_free() to free the key in each entry, as well as StringMapItems and StringMap.
+
+Create stringmap_search() that searches an item in StringMapItem by a key.
+
+Create stringmap_add() to add a new StringMapItem to the StringMap array.
+
+Create stringmap_remove() to remove StringMapItem from the StringMap array.
+
+Create stringmap_iterate() to iterate the StringMap and return to the next entry or NULL.
+
+
+Index: stringmap.c
+ stringmap.c |   92 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 92 insertions(+)
+
+------------------------------------------------------------------------
+r49 | s4605580 | 2022-10-27 12:43:54 +1000 (Thu, 27 Oct 2022) | 8 lines
+Changed paths:
+   M /trunk/a4/psserver.c
+
+Add the file descriptor of http listening port httpFd to ThreadArgs struct.
+
+Move some variables in threadArgs from process_connection() to main function so that those variables can be sent to http handling function.
+
+Create http_handling() to handle http request.
+
+Change error messages when error occurs in process_http_connections() and create thread to handle connections.
+
+
+Index: psserver.c
+ psserver.c |   78 +++++++++++++++++++++++++++++++++++++++++++++----------------
+ 1 file changed, 58 insertions(+), 20 deletions(-)
+
+------------------------------------------------------------------------
+r50 | s4605580 | 2022-10-27 14:13:57 +1000 (Thu, 27 Oct 2022) | 2 lines
+Changed paths:
+   M /trunk/a4/psserver.c
+
+Add comments to functions and macors and enums to meet the style requirements.
+
+
+Index: psserver.c
+ psserver.c |  210 ++++++++++++++++++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 186 insertions(+), 24 deletions(-)
+
+------------------------------------------------------------------------
+r51 | s4605580 | 2022-10-27 16:09:27 +1000 (Thu, 27 Oct 2022) | 2 lines
+Changed paths:
+   M /trunk/a4/psserver.c
+
+Some changes in http_handling() to get rid of fixed buffer in respond body. I use snprinf to return the buffer of string, and then malloc the string.
+
+
+Index: psserver.c
+ psserver.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+------------------------------------------------------------------------
+r52 | s4605580 | 2022-10-27 16:12:10 +1000 (Thu, 27 Oct 2022) | 2 lines
+Changed paths:
+   M /trunk/a4/psserver.c
+
+Add some comments in constructing respond body.
+
+
+Index: psserver.c
+ psserver.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+------------------------------------------------------------------------
+r53 | s4605580 | 2022-10-28 16:15:35 +1000 (Fri, 28 Oct 2022) | 4 lines
+Changed paths:
+   M /trunk/a4/psserver.c
+
+Add flose() to the reading end and writing end of a port to avoid running out of file descriptor.
+
+Add stringmap_iterate() and stringmap_remove() in client_threat() function, which will remove sub topics when a client disconnected.
+
+
+Index: psserver.c
+ psserver.c |   12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+------------------------------------------------------------------------
+r54 | s4605580 | 2022-10-28 16:44:17 +1000 (Fri, 28 Oct 2022) | 2 lines
+Changed paths:
+   M /trunk/a4/stringmap.c
+
+Add comment to stringMap struct.
+
+
+Index: stringmap.c
+ stringmap.c |    3 +++
+ 1 file changed, 3 insertions(+)
+
+------------------------------------------------------------------------
