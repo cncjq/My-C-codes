@@ -1,0 +1,372 @@
+URL to view log online:
+https://source.eait.uq.edu.au/viewvc/csse2310-sem2-s4605580/trunk/a3/?view=log
+
+Retrieving logs at Sat Oct 8 17:08:55 AEST 2022
+------------------------------------------------------------------------
+r1 | uqpsutto | 2022-07-27 22:00:21 +1000 (Wed, 27 Jul 2022) | 1 line
+Changed paths:
+   A /play
+   A /prac
+   A /trunk
+   A /trunk/a1
+   A /trunk/a3
+   A /trunk/a4
+
+Initial repository structure
+
+
+------------------------------------------------------------------------
+r24 | s4605580 | 2022-09-16 18:59:13 +1000 (Fri, 16 Sep 2022) | 12 lines
+Changed paths:
+   A /trunk/a3/jobthing.c
+
+Start writing this program.
+
+Define minimum argument length and maximum argument length.
+
+Add enums of exitcode number and jobthing mode.
+
+Define a struct for parameters, which includes jobthing mode, inputfile and jobfile.
+
+create a function usage_error to handle usage error.
+
+create a function parse_command_line to handle input arguments, which includes "-v", "-i inputfile" and "jobfile".
+
+
+Index: jobthing.c
+ jobthing.c |   65 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
+
+------------------------------------------------------------------------
+r25 | s4605580 | 2022-09-18 00:41:38 +1000 (Sun, 18 Sep 2022) | 10 lines
+Changed paths:
+   M /trunk/a3/jobthing.c
+
+change ExitCode variable names.
+
+add seeParamI and seeParamV both are bool type to struct Parameters, which will be used to indicate if parameter -i or -v has been used.
+
+create a struct FileDescriptors to store file descriptors value, which includes fdInputFile and fdJobFile.
+
+rewrite parse_command_line function (just realized the old one referrred to A1 solution, which I can't do). This function handles the correctness of command line arguments.
+
+create a read_file() function, to check if the input file or job file can be opened.
+
+
+Index: jobthing.c
+ jobthing.c |   71 ++++++++++++++++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 54 insertions(+), 17 deletions(-)
+
+------------------------------------------------------------------------
+r26 | s4605580 | 2022-09-21 23:19:36 +1000 (Wed, 21 Sep 2022) | 10 lines
+Changed paths:
+   M /trunk/a3/jobthing.c
+
+Defines the command constant that the jobfile line splited in 4 sections.
+
+Add a new struct Job, to store jobfile arguments
+
+Fix bugs in parse_command_line function, change the if statement in "-i" argument. Now this function correctly avoid double use of "-i"
+
+Add check_jobfile function, which inputs a job line and retrun a Job pointer. This function checks if the job line of the jobfile is valid, and will return the valid job line.
+
+Update the read_file function, which now inputs Parameters and return an array of strings. change the machanism of checking open file from file descriptor to file pointer, which is more convinient to use provided functions.
+
+
+Index: jobthing.c
+ jobthing.c |  103 ++++++++++++++++++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 85 insertions(+), 18 deletions(-)
+
+------------------------------------------------------------------------
+r27 | s4605580 | 2022-09-22 00:13:53 +1000 (Thu, 22 Sep 2022) | 1 line
+Changed paths:
+   A /trunk/a3/mytee.c
+
+
+
+Index: mytee.c
+ mytee.c |   87 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 87 insertions(+)
+
+------------------------------------------------------------------------
+r28 | s4605580 | 2022-09-22 00:16:35 +1000 (Thu, 22 Sep 2022) | 12 lines
+Changed paths:
+   M /trunk/a3/mytee.c
+
+Start writing mytee.c
+
+Defined some useful constants, including min_arg_len, max_arg_len, fd_const, read_end, write_end.
+
+Add enum for exitcode, includeing usage_error = 1 and read_error = 2.
+
+Add parameters struct, including arg of outputfile and parameter "-a".
+
+Add parse_command_line function, which handles invalid commandline arguments and returns parameters.
+
+In the main function, checking if the outputfile can be opened. Also, start writing folk(), dup2(), write() functions to satisfy the functionalities, but haven't finished yet.
+
+
+Index: mytee.c
+ mytee.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+------------------------------------------------------------------------
+r29 | s4605580 | 2022-09-22 00:17:50 +1000 (Thu, 22 Sep 2022) | 2 lines
+Changed paths:
+   A /trunk/a3/Makefile
+
+Add Makefile for building the two programs jobthing and mytee.
+
+
+Index: Makefile
+ Makefile |    9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+------------------------------------------------------------------------
+r30 | s4605580 | 2022-09-26 00:24:22 +1000 (Mon, 26 Sep 2022) | 12 lines
+Changed paths:
+   M /trunk/a3/mytee.c
+
+Just realized that I don't need to folk and pipe.
+
+Deleted unused macros and add comments.
+
+Use file pointer fp to open and read file, replacing file descriptors.
+
+Removed old codes written using pipe, open, close.
+
+In main, print each line from stdin to file pointer and stdout, fflush each time read a new line and free each line.
+
+Close file at the end.
+
+
+Index: mytee.c
+ mytee.c |   50 +++++++++++++++++++++++++++++---------------------
+ 1 file changed, 29 insertions(+), 21 deletions(-)
+
+------------------------------------------------------------------------
+r31 | s4605580 | 2022-10-01 00:59:29 +1000 (Sat, 01 Oct 2022) | 35 lines
+Changed paths:
+   M /trunk/a3/jobthing.c
+
+Add <sys/wait.h> library.
+
+Add three macros, file descriptor constant = 2, read and write end = 0, 1.
+
+Add EXEC_FAIL = 99 in enum ExitCode.
+
+Create enum SplitFields stands for the fields split in each job line, including the restart field, input field, output field, and command field.
+
+Remove FileDescriptor struct, not useful.
+
+Add jobNum in struct Job, to mark the current job number.
+
+Create a function invalid_job_spec() to print error message.
+
+Modify check_jobfile(), add another input verboseMode to check the Mode, also change some variables names. This function can check if a job is valid or not.
+
+Modify read_file(), add a new input jobNum in this function. Now, this function can correctly read job file and return valid command lines.
+
+Create creating_pipe() to create pipe, inputs an array of file descriptor and returns nothing, will print error when errors occur in creating pipe.
+
+Create handle_input() to handle the input argument in a job. This function will check if the input file can be opened, will return a unrunnable job if not.
+
+Create wait_child() to wait children, which needs child pid and job content as input.
+This function will print the message about why children die.
+
+Create split_command() to split the command field of a job line, and return an array of command and arguments to exec later.
+
+Create parent_operation() to handle jobthing's operation after fork. It will close end of pipe depends on the parameter.
+
+Create child_operation() to handle job's operation after fork. This function now handles the pipe open and close depends on job line, and exec job at the end.
+
+Create job_startup() to start a job after reading job file. This function will check if the job is runnable and skip the current job if it's unrunnable. This function redirects corresponding reading or writing end and decide creating a pipe or not. Will return job when all jobs done or the job is unrunnable.
+
+Modify main function. Add reading job file and starting jobs, and print message to stderr when there's no more viable workers.
+
+
+Index: jobthing.c
+ jobthing.c |  266 +++++++++++++++++++++++++++++++++++++++++++++++++------------
+ 1 file changed, 218 insertions(+), 48 deletions(-)
+
+------------------------------------------------------------------------
+r32 | s4605580 | 2022-10-03 00:19:55 +1000 (Mon, 03 Oct 2022) | 20 lines
+Changed paths:
+   M /trunk/a3/jobthing.c
+
+Add more components in Job struct, including childid, input/output filedescriptor and counting the current running time to support later use.
+
+Replace atoi() to strtol() which performs better in trasformming str to int.
+
+Add and remove some commented codes.
+
+Remove handle_input() function, which is useless in this programme.
+
+Commented wait_child function, maybe will use it again.
+
+Change the function name of parent_operation() and child_operation() to jobthing_pipe_handle() and job_pipe_handle().
+
+Move the exec part from job_pipe_handle() to job_startup(). The parent/child_pipe_handle only handles pipe ends now.
+
+Create a new function clean_pipe to close unused pipe ends.
+
+Change job_startup(), add two parameters Job** jobs and int JobNum, which are helpful in cleaning unused pipes. Now in this function, children will clean the unused pipe ends inherited from parent before exec*. 
+
+Add countRun and sleep in main function.
+
+
+Index: jobthing.c
+ jobthing.c |  237 ++++++++++++++++++++++++++++++++++---------------------------
+ 1 file changed, 135 insertions(+), 102 deletions(-)
+
+------------------------------------------------------------------------
+r33 | s4605580 | 2022-10-06 18:41:15 +1000 (Thu, 06 Oct 2022) | 2 lines
+Changed paths:
+   M /trunk/a3/mytee.c
+
+Tiny changes of comments.
+
+
+Index: mytee.c
+ mytee.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+------------------------------------------------------------------------
+r34 | s4605580 | 2022-10-06 18:58:37 +1000 (Thu, 06 Oct 2022) | 30 lines
+Changed paths:
+   M /trunk/a3/jobthing.c
+
+Add comments to all functions, enums, structs.
+
+Add more things to Job struct, including a bool if a job is runnable, file pointers that point to pipe ends named readFromJob and writeFromjob.
+
+Create a new function remove_quotes to handle job commands that contain double quotes. 
+
+Make some changes in read_file, not it can correctly print out the command that contains double quote.
+
+Add many fflush() after print or fprint.
+
+Remove wait_child(), it does not useful.
+
+Make some changes in jobthing_pipe_handle(), fdopen a file pointer to replace file descriptors.
+
+Make some changes in clean_pipe(), now this function flose() file pointer that holds insome ends or pipes.
+
+Make some chagnges in job_startup(), it will close unused pipes that a child inherited from parents.
+
+Rewrite restart_working. It checks if a job is running, and if the job is still runnable, then it will try to restart the job.
+
+Create a new funtion check_alive(), this function is checking if a job is running, it will return the exit status when a job dies.
+
+Create a funciton send_to_job() to send data from jobthing to a job.
+
+Create a function read_from_job() to read data from a job.
+
+Rewrite jobthing_operation(). This function now can correctly handle the job operation.It will help jobthing start a job if needed and send or receive data from jobs.
+
+Tiny changes of main function, basically just a order of functions.
+
+
+Index: jobthing.c
+ jobthing.c |  433 +++++++++++++++++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 337 insertions(+), 96 deletions(-)
+
+------------------------------------------------------------------------
+r35 | s4605580 | 2022-10-07 00:53:08 +1000 (Fri, 07 Oct 2022) | 16 lines
+Changed paths:
+   M /trunk/a3/jobthing.c
+
+Add <signal.h> library to handle signal.
+
+Add more macros.
+
+Set a global variable to handle signal later.
+
+Replace some magic numbers by macros, making them meaningful.
+
+Add comments to uncommended functions.
+
+Fix some style errors.
+
+Create a function check_command(). This function will check if a command that starts by "*" from a input file or stdin is valid or not.
+
+Add some codes in jobthing_operation(), which makes it handles command from jobthing input.
+
+
+Index: jobthing.c
+ jobthing.c |  107 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 100 insertions(+), 7 deletions(-)
+
+------------------------------------------------------------------------
+r36 | s4605580 | 2022-10-08 00:34:35 +1000 (Sat, 08 Oct 2022) | 18 lines
+Changed paths:
+   M /trunk/a3/jobthing.c
+
+Add more macro to avoid magic number.
+
+Remove unused commented functions and variables.
+
+Create a new structure to handle jobthing command from inputfile or stdin.
+
+Add a function prototype.
+
+Add some free() to free memories.
+
+Make some change in remove_quotes(), it can now remove the last empty string in command.
+
+Change the name of check_command() to process_command() and make some changes in the function, now it can handle the command received from the input.
+
+Using usleep() now instead of sleep();
+
+Add free_jobs() to free memories allocated to jobs.
+
+
+Index: jobthing.c
+ jobthing.c |  188 ++++++++++++++++++++++++++++++++++++-------------------------
+ 1 file changed, 111 insertions(+), 77 deletions(-)
+
+------------------------------------------------------------------------
+r37 | s4605580 | 2022-10-08 17:04:31 +1000 (Sat, 08 Oct 2022) | 10 lines
+Changed paths:
+   M /trunk/a3/jobthing.c
+
+Add an enum to handle input command voiding magic numbers.
+
+Add a structure to hold signal handler.
+
+Add a global variable to handle signal later.
+
+Create a stat_report function as function pointer to be use in signal handler.
+
+Add signal handling part in main function.
+
+
+Index: jobthing.c
+ jobthing.c |   49 ++++++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 44 insertions(+), 5 deletions(-)
+
+------------------------------------------------------------------------
+r38 | s4605580 | 2022-10-08 17:06:59 +1000 (Sat, 08 Oct 2022) | 2 lines
+Changed paths:
+   M /trunk/a3/jobthing.c
+
+Add and remove some comments.
+
+
+Index: jobthing.c
+ jobthing.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+------------------------------------------------------------------------
+r39 | s4605580 | 2022-10-08 17:08:06 +1000 (Sat, 08 Oct 2022) | 2 lines
+Changed paths:
+   M /trunk/a3/jobthing.c
+
+add a comment to global variable.
+
+
+Index: jobthing.c
+ jobthing.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+------------------------------------------------------------------------
